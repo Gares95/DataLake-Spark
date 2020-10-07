@@ -85,15 +85,18 @@ def process_log_data(spark, input_data, output_data):
 
     # extract columns from joined song and log datasets to create songplays table 
     # songplays_table = df.select(['songplay_id','start_time','user_id','level','song_id','artist_id','session_id','artist_location as location', 'user_agent'])
+    df.createOrReplaceTempView("logs")
+    song_df.createOrReplaceTempView("songs")
     songplays_table = spark.sql(
     '''
-    SELECT DISTINCT TIMESTAMP 'epoch' + se.ts/1000 * interval '1 second' as start_time, se.userId, se.level, ss.song_id, ss.artist_id, se.sessionId, se.location, se.userAgent
-    FROM staging_events AS se
-    JOIN staging_songs AS ss
-    ON ss.title = se.song AND ss.artist_name = se.artist
-    WHERE se.page = 'NextSong';
+    SELECT monotonically_increasing_id() as songplay_id, logs.datetime as start_time, logs.userId as user_id, logs.level, song.song_id, song.artist_id, logs.sessionId, logs.location, logs.userAgent
+    FROM logs
+    JOIN songs 
+    ON songs.title = logs.song
     '''
     )
+    songplays_table = songplays_table.withColumn('month', month('datetime')).withColumn('year', year('datetime'))
+    
 
     # write songplays table to parquet files partitioned by year and month
     songplays_tables.write.partitionBy(['year','month']).parquet("{}/songplays.parquet".format(output_data), mode = "overwrite")
