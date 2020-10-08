@@ -14,6 +14,10 @@ os.environ['AWS_SECRET_ACCESS_KEY']=config.get('AWS','AWS_SECRET_ACCESS_KEY')
 
 
 def create_spark_session():
+    """
+    This function instantiate the spark module that we are going to use.
+
+    """
     spark = SparkSession \
         .builder \
         .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:2.7.0") \
@@ -22,6 +26,16 @@ def create_spark_session():
 
 
 def process_song_data(spark, input_data, output_data):
+    """
+    This function extracts and process the data from the S3 bucket from udacity 
+	to create the "songs" and "artist" dimensional tables and insert them in the new
+	S3 bucket.
+
+    INPUTS:
+    * spark: the spark module
+    * input_data: the path to the S3 bucket that will be extracted and processed.
+	+ output_data: the path to the new S3 bucket in which we will insert the tables.
+    """
     # get filepath to song data file
 
     # for local testing
@@ -46,6 +60,17 @@ def process_song_data(spark, input_data, output_data):
 
 
 def process_log_data(spark, input_data, output_data):
+    """
+    This function extracts and process the data from the S3 bucket from udacity 
+	to create the "users" and "time" dimensional tables and the "songplays" fact 
+	table to later insert them in the new S3 bucket. 
+	
+
+    INPUTS:
+    * spark: the spark module
+    * input_data: the path to the S3 bucket that will be extracted and processed.
+	+ output_data: the path to the new S3 bucket in which we will insert the tables.
+    """
     # get filepath to log data file
     log_data ="{}/log_data/*.json".format(input_data)
     
