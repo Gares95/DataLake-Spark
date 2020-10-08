@@ -104,11 +104,10 @@ def main():
     input_data = "s3a://udacity-dend/"
     output_data = "s3a://gg-data-lake-udacity/"
 
-  # For local testing
-  # input_data = "data"  
-  # output_data = "output"
-    
-    process_song_data(spark, input_data, output_data)    
+	# For local testing
+	# input_data = "data"
+    # output_data = "output"
+    process_song_data(spark, input_data, output_data)
     process_log_data(spark, input_data, output_data)
 
 
