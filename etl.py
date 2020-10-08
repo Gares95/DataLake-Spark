@@ -74,7 +74,7 @@ def process_log_data(spark, input_data, output_data):
     df = df.withColumn("datetime", get_datetime(df.ts))
     
     # extract columns to create time table
-    time_table = df.select('datetime').withColumn('hour', hour('datetime')).withColumn('day', dayofmonth('datetime')).withColumn('week', weekofyear('datetime')).withColumn('month', month('datetime')).withColumn('year', year('datetime')).withColumn('weekday', dayofweek('datetime'))
+    time_table = df.select(['start_time','datetime']).withColumn('hour', hour('datetime')).withColumn('day', dayofmonth('datetime')).withColumn('week', weekofyear('datetime')).withColumn('month', month('datetime')).withColumn('year', year('datetime')).withColumn('weekday', dayofweek('datetime')).drop('datetime').dropDuplicates()
     
     # write time table to parquet files partitioned by year and month
     time_table.write.partitionBy(['year','month']).parquet("{}/times.parquet".format(output_data), mode = "overwrite")
