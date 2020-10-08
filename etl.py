@@ -70,7 +70,6 @@ def process_log_data(spark, input_data, output_data):
     df = df.withColumn("start_time", get_timestamp(df.ts))
     
     # create datetime column from original timestamp column
-    # get_datetime = udf(lambda x: datetime.fromtimestamp(x / 1000.0))
     get_datetime = udf(lambda x: str(datetime.fromtimestamp(int(x) / 1000.0)))
     df = df.withColumn("datetime", get_datetime(df.ts))
     
@@ -84,22 +83,21 @@ def process_log_data(spark, input_data, output_data):
     song_df = spark.read.parquet("{}/songs.parquet".format(output_data))
 
     # extract columns from joined song and log datasets to create songplays table 
-    # songplays_table = df.select(['songplay_id','start_time','user_id','level','song_id','artist_id','session_id','artist_location as location', 'user_agent'])
     df.createOrReplaceTempView("logs")
     song_df.createOrReplaceTempView("songs")
     songplays_table = spark.sql(
     '''
-    SELECT monotonically_increasing_id() as songplay_id, logs.datetime as start_time, logs.userId as user_id, logs.level, song.song_id, song.artist_id, logs.sessionId, logs.location, logs.userAgent
+    SELECT monotonically_increasing_id() as songplay_id, logs.datetime as start_time, logs.userId as user_id, logs.level, songs.song_id, songs.artist_id, logs.sessionId, logs.location, logs.userAgent
     FROM logs
     JOIN songs 
     ON songs.title = logs.song
     '''
     )
-    songplays_table = songplays_table.withColumn('month', month('datetime')).withColumn('year', year('datetime'))
+    songplays_table = songplays_table.withColumn('month', month('start_time')).withColumn('year', year('start_time'))
     
 
     # write songplays table to parquet files partitioned by year and month
-    songplays_tables.write.partitionBy(['year','month']).parquet("{}/songplays.parquet".format(output_data), mode = "overwrite")
+    songplays_table.write.partitionBy(['year','month']).parquet("{}/songplays.parquet".format(output_data), mode = "overwrite")
 
 
 def main():
