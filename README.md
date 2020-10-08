@@ -29,20 +29,27 @@ And here is an example of a json file for these events: _{"artist": "None", "aut
 ### The star schema tables
 The star schema that is going to be created using this program will have the next structure:
 
-> - _Fact table_:
-> 1. songplays [songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent]
+- _Fact table_:
+1. songplays [songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent]
 
-> - _Dimension tables_:
-> 2. users [user_id, first_name, last_name, gender, level]
-> 3. songs [song_id, title, artist_id, year, duration]
-> 4. artist [artist_id, name, location, lattitude, longitude]
-> 5. time [start_time, hour, day, week, month, year, weekday]
+- _Dimension tables_:
+2. users [user_id, first_name, last_name, gender, level]
+3. songs [song_id, title, artist_id, year, duration]
+4. artist [artist_id, name, location, lattitude, longitude]
+5. time [start_time, hour, day, week, month, year, weekday]
 
 # Program files
 ***
 ## df.cfg
 
 This file contains the AWS credentials to access the S3 buckets. 
+Here you will have to introduce your AWS key and secret access key:
+
+[AWS]
+
+AWS_ACCESS_KEY_ID=< "your AWS access key" >
+    
+AWS_SECRET_ACCESS_KEY=< "your AWS secret access key" >
 
 ## etl.py
 
@@ -52,7 +59,7 @@ With this file we will process all files from the S3 buckets and create the star
 
 This file provides the descrpition of the program and process of the etl.
 
-Some examples:
+Some examples queries:
 >In case I want to test how many songs in the "songplay list" do we have in our "song list"  
 >%sql SELECT * FROM songplays WHERE song_id != 'None' LIMIT 5;
 
