@@ -47,9 +47,9 @@ Here you will have to introduce your AWS key and secret access key:
 
 [AWS]
 
-AWS_ACCESS_KEY_ID=< "your AWS access key" >
+AWS_ACCESS_KEY_ID=<your AWS access key>
     
-AWS_SECRET_ACCESS_KEY=< "your AWS secret access key" >
+AWS_SECRET_ACCESS_KEY=<your AWS secret access key>
 
 ## etl.py
 
