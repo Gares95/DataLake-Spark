@@ -37,9 +37,6 @@ def process_song_data(spark, input_data, output_data):
 	+ output_data: the path to the new S3 bucket in which we will insert the tables.
     """
     # get filepath to song data file
-
-    # for local testing
-    # song_data = "data/song_data/*/*/*/*.json"
     
     song_data = "{}/song_data/*/*/*/*.json".format(input_data)
     
@@ -73,9 +70,6 @@ def process_log_data(spark, input_data, output_data):
     """
     # get filepath to log data file
     log_data ="{}/log_data/*.json".format(input_data)
-    
-    # For local testing
-    # log_data = "data/log_data/*.json"
 
     # read log data file
     df = spark.read.json(log_data)
@@ -129,9 +123,6 @@ def main():
     input_data = "s3a://udacity-dend/"
     output_data = "s3a://gg-data-lake-udacity/"
 
-	# For local testing
-	# input_data = "data"
-    # output_data = "output"
     process_song_data(spark, input_data, output_data)
     process_log_data(spark, input_data, output_data)
 
