@@ -36,13 +36,13 @@ def process_song_data(spark, input_data, output_data):
     df = spark.read.json(song_data)
 
     # extract columns to create songs table
-    songs_table = df.select(['song_id','title','artist_id','year','duration'])
+    songs_table = df.select(['song_id','title','artist_id','year','duration']).dropDuplicates()
     
     # write songs table to parquet files partitioned by year and artist
     songs_table.write.partitionBy(['year','artist_id']).parquet(os.path.join(output_data, "songs"), mode = "overwrite")
 
     # extract columns to create artists table
-    artists_table = df.selectExpr('artist_id','artist_name as name','artist_location as location','artist_latitude as latitude','artist_longitude as longitude')
+    artists_table = df.selectExpr('artist_id','artist_name as name','artist_location as location','artist_latitude as latitude','artist_longitude as longitude').dropDuplicates()
     
     # write artists table to parquet files
     artists_table.write.parquet(os.path.join(output_data, "artists"), mode = "overwrite")
@@ -70,7 +70,7 @@ def process_log_data(spark, input_data, output_data):
     df = df.filter(df.page == "NextSong")
 
     # extract columns for users table    
-    users_table = df.selectExpr(['userId as user_id','firstName as first_name','lastName as last_name','gender','level']) 
+    users_table = df.selectExpr(['userId as user_id','firstName as first_name','lastName as last_name','gender','level']).dropDuplicates()
     
     # write users table to parquet files
     users_table.write.parquet(os.path.join(output_data, "users"), mode = "overwrite")
@@ -93,10 +93,11 @@ def process_log_data(spark, input_data, output_data):
     song_df.createOrReplaceTempView("songs")
     songplays_table = spark.sql(
     '''
-    SELECT monotonically_increasing_id() as songplay_id, logs.datetime as start_time, logs.userId as user_id, logs.level, songs.song_id, songs.artist_id, logs.sessionId, logs.location, logs.userAgent
+    SELECT DISTINCT monotonically_increasing_id() as songplay_id, logs.datetime as start_time, logs.userId as user_id, logs.level, songs.song_id, songs.artist_id, logs.sessionId, logs.location, logs.userAgent
     FROM logs
     JOIN songs 
     ON songs.title = logs.song AND songs.artist_name = logs.artist AND songs.duration = logs.length
+    WHERE logs.page = 'NextSong';
     '''
     )
     songplays_table = songplays_table.withColumn('month', month('start_time')).withColumn('year', year('start_time'))
