@@ -38,6 +38,8 @@ The star schema that is going to be created using this program will have the nex
 4. artist [artist_id, name, location, lattitude, longitude]
 5. time [start_time, hour, day, week, month, year, weekday]
 
+![alt text](https://raw.githubusercontent.com/Gares95/DataLake-Spark/master/Star%20Schema.PNG)
+
 # Program files
 ***
 ## df.cfg
