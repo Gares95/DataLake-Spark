@@ -6,11 +6,6 @@ This repository simulates the creation of an ETL pipeline for a music streaming 
 
 The data currently is in an S3 bucket in directories which contains their log data and song data in JSON files. The objective of the main program of this repository is to process the data and create a star schema optimized for queries for the song play analysis.
 
-
-### Credits
-Udacity provided the template and the guidelines to start this project.
-The completion of this was made by Guillermo Garcia and the review of the program and the verification that the project followed the proper procedures was also made by my mentor from udacity.
-
 # Data Files
 ***
 The datasets used for this project that reside in S3 are:
@@ -61,19 +56,7 @@ With this file we will process all files from the S3 buckets and create the star
 
 This file provides the descrpition of the program and process of the etl.
 
-Some examples queries:
->In case I want to test how many songs in the "songplay list" do we have in our "song list"  
->%sql SELECT * FROM songplays WHERE song_id != 'None' LIMIT 5;
-
-
->If we want to check which are 'paid' level  
->%sql SELECT * FROM songplays WHERE level = 'paid';
-
-
->If we want to find a specific song by its songid  
->%sql SELECT * FROM songs WHERE song_id = 'SOZCTXZ12AB0182364';
-
-
->If we want to know which songs are from the year 2008  
->%sql SELECT * FROM songs WHERE year = '2008';
+### Credits
+Udacity provided the template and the guidelines to start this project.
+The completion of this was made by Guillermo Garcia and the review of the program and the verification that the project followed the proper procedures was also made by my mentor from udacity.
 
